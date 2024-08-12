@@ -1,6 +1,5 @@
 {
   "name": "nitro-jsr",
-  "private": true,
   "version": "0.0.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
