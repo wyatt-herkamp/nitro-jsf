@@ -1,5 +1,5 @@
-import { FormInputType } from './../JsonForm'
-import { InputValidator, SchemaHTMLInputEquivalence } from '../JsonForm'
+import { FormInputType } from '../jsonForm'
+import { InputValidator, SchemaHTMLInputEquivalence } from '../jsonForm'
 import { Property } from '../lib'
 
 export class DefaultInput implements FormInputType {
@@ -8,6 +8,9 @@ export class DefaultInput implements FormInputType {
   constructor(propertyKey: string, property: Property) {
     this.property = property
     this.propertyKey = propertyKey
+  }
+  originalProperty(): Property {
+    return this.property
   }
   title(): string | undefined {
     return this.property.title
@@ -37,12 +40,13 @@ export class DefaultInput implements FormInputType {
     return this.property.default
   }
   debug(): string {
-    let title = this.title() ?? this.key()
+    const title = this.title() ?? this.key()
     return `${this.type}: ${title}`
   }
   htmlElement(): SchemaHTMLInputEquivalence | undefined {
     return undefined
   }
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   validator(): InputValidator {
     return {
       validate: (value: any) => {

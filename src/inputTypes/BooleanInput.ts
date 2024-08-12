@@ -1,4 +1,4 @@
-import { FormInputType, InputValidator, SchemaHTMLInputEquivalence } from '../JsonForm'
+import { FormInputType, InputValidator, SchemaHTMLInputEquivalence } from '../jsonForm'
 import { Property } from '../lib'
 import { ParsingSchema } from '../schemaParser/schema'
 
@@ -8,6 +8,9 @@ export class BooleanInput implements FormInputType {
   constructor(property: Property, propertyKey: string) {
     this.property = property
     this.propertyKey = propertyKey
+  }
+  originalProperty(): Property {
+    return this.property
   }
   title(): string | undefined {
     return this.property.title
@@ -37,7 +40,7 @@ export class BooleanInput implements FormInputType {
     return this.property.default
   }
   debug(): string {
-    let titleOrKey = this.title ?? this.key
+    const titleOrKey = this.title ?? this.key
     return `Bool: ${titleOrKey}`
   }
   htmlElement(): SchemaHTMLInputEquivalence | undefined {
@@ -54,6 +57,7 @@ export class BooleanInput implements FormInputType {
     }
   }
 }
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export function booleanInputFromProperty(
   key: string,
   property: Property,

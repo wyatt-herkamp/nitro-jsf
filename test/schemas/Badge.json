@@ -1,46 +1,42 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "BadgeSettings",
-    "type": "object",
-    "properties": {
-        "color": {
-            "$ref": "#/$defs/RGBColor",
-            "default": "#33B5E5"
-        },
-        "label_color": {
-            "$ref": "#/$defs/RGBColor",
-            "default": "#555555"
-        },
-        "style": {
-            "$ref": "#/$defs/BadgeStyle",
-            "default": "flat"
-        },
-        "defaults": {
-            "type": "object",
-            "properties": {
-                "label": {
-                    "type": "string",
-                    "default": "label"
-                },
-                "message": {
-                    "type": "string",
-                    "default": "message"
-                }
-            }
-        }
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BadgeSettings",
+  "type": "object",
+  "properties": {
+    "color": {
+      "$ref": "#/$defs/RGBColor",
+      "default": "#33B5E5"
     },
-    "$defs": {
-        "BadgeStyle": {
-            "type": "string",
-            "enum": [
-                "flat",
-                "plastic",
-                "flatquare"
-            ]
+    "label_color": {
+      "$ref": "#/$defs/RGBColor",
+      "default": "#555555"
+    },
+    "style": {
+      "$ref": "#/$defs/BadgeStyle",
+      "default": "flat"
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "default": "label"
         },
-        "RGBColor": {
-            "type": "string",
-            "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$"
+        "message": {
+          "type": "string",
+          "default": "message"
         }
+      }
     }
+  },
+  "$defs": {
+    "BadgeStyle": {
+      "type": "string",
+      "enum": ["flat", "plastic", "flatquare"]
+    },
+    "RGBColor": {
+      "type": "string",
+      "pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$"
+    }
+  }
 }

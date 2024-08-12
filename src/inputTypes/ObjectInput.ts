@@ -1,7 +1,6 @@
-import { FormInputType } from './../JsonForm'
-import { InputValidator, SchemaHTMLInputEquivalence } from '../JsonForm'
+import { FormInputType } from '../jsonForm'
+import { InputValidator, SchemaHTMLInputEquivalence } from '../jsonForm'
 import { Property } from '../lib'
-import { DefaultInput } from './DefaultInput'
 import { ParsingSchema } from '../schemaParser/schema'
 import { parseProperty } from '../schemaParser/properties'
 
@@ -13,6 +12,9 @@ export class ObjectInputType implements FormInputType {
     this.property = property
     this.propertyKey = propertyKey
     this.items = items
+  }
+  originalProperty(): Property {
+    return this.property
   }
   title(): string | undefined {
     return this.property.title
@@ -42,8 +44,8 @@ export class ObjectInputType implements FormInputType {
     return this.property.default
   }
   debug(): string {
-    let titleOrKey = this.title ?? this.key
-    let itemsDebug = this.items.map((item) => item.debug()).join(', ')
+    const titleOrKey = this.title ?? this.key
+    const itemsDebug = this.items.map((item) => item.debug()).join(', ')
     return `Object: ${titleOrKey} [${itemsDebug}]`
   }
 
@@ -51,6 +53,7 @@ export class ObjectInputType implements FormInputType {
     // This tells the form renderer. That this is a subform
     return new SchemaHTMLInputEquivalence('form', {})
   }
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   validator(): InputValidator {
     // TODO: Implement Object Validator
     return {
@@ -60,18 +63,17 @@ export class ObjectInputType implements FormInputType {
     }
   }
 }
-
 export function objectInputFromProperty(
   key: string,
   property: Property,
-  parsingSchema: ParsingSchema,
+  parsingSchema: ParsingSchema
 ): ObjectInputType | undefined {
   if (property.type !== 'object') {
     return undefined
   }
-  let items = new Array<FormInputType>()
+  const items = new Array<FormInputType>()
   for (const [key, value] of Object.entries(property.properties)) {
-    let property = parseProperty(key, value, parsingSchema)
+    const property = parseProperty(key, value, parsingSchema)
     console.debug(`[DEBUG] Property in ObjectInput: ${property.debug()}`)
     items.push(property)
   }

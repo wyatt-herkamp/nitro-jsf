@@ -1,6 +1,6 @@
 import { enumInputFromProperty } from '../inputTypes/EnumInput'
 import { stringInputFromProperty } from '../inputTypes/StringInput'
-import { FormInputType } from '../JsonForm'
+import { FormInputType } from '../jsonForm'
 import { ParsingSchema } from './schema'
 import { DefaultInput } from '../inputTypes/DefaultInput'
 import { booleanInputFromProperty } from '../inputTypes/BooleanInput'
@@ -21,11 +21,11 @@ export interface RefProperty extends Property {
 }
 
 export function parseProperties(parsing: ParsingSchema): Array<FormInputType> {
-  let parsedProperties = Array<FormInputType>()
+  const parsedProperties = Array<FormInputType>()
   for (const key in parsing.schema.properties) {
     if (Object.prototype.hasOwnProperty.call(parsing.schema.properties, key)) {
       const element = parsing.schema.properties[key]
-      let parsed = parseProperty(key, element, parsing)
+      const parsed = parseProperty(key, element, parsing)
       parsedProperties.push(parsed)
     }
   }
@@ -49,8 +49,8 @@ function parseRefProperty(
   property: RefProperty,
   parsing: ParsingSchema
 ): FormInputType {
-  let ref = property['$ref']
-  let definition = parsing.definitions.lookupDefinition(ref)
+  const ref = property['$ref']
+  const definition = parsing.definitions.lookupDefinition(ref)
   return parseProperty(key, definition, parsing)
 }
 function parseTypedProperty(
@@ -58,6 +58,9 @@ function parseTypedProperty(
   property: Property,
   parsing: ParsingSchema
 ): FormInputType {
+  if (property.type === 'null') {
+    throw new Error('Null type is not supported')
+  }
   let resultInputType
   for (const parser of propertyParsers) {
     resultInputType = parser(key, property, parsing)
@@ -73,8 +76,11 @@ function parseTypedProperty(
   return resultInputType
 }
 
-type PropertyParser = (key: string, property: Property,
-  parsingSchema: ParsingSchema) => FormInputType | undefined
+type PropertyParser = (
+  key: string,
+  property: Property,
+  parsingSchema: ParsingSchema
+) => FormInputType | undefined
 const propertyParsers: Array<PropertyParser> = [
   enumInputFromProperty,
   stringInputFromProperty,

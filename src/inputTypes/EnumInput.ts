@@ -3,15 +3,16 @@ import {
   InputValidator,
   SchemaHTMLInputEquivalence,
   ValidationResult
-} from '../JsonForm'
+} from '../jsonForm'
 import { Property } from '../lib'
 import { ParsingSchema } from '../schemaParser/schema'
 
 export interface EnumValue {
-  value: string
-  name: string
+  value: any
+  title?: string
   description?: string
 }
+
 export class EnumValidator implements InputValidator {
   values: EnumValue[]
   hasDefaultValue: boolean = false
@@ -35,7 +36,9 @@ export class EnumValidator implements InputValidator {
     return { success: true }
   }
 }
-
+/**
+ * The EnumInput class is used if the type has the enum property. Or if it has the oneOf property with all the values being strings.
+ */
 export class EnumInput implements FormInputType {
   values: EnumValue[]
   propertyKey: string
@@ -44,6 +47,9 @@ export class EnumInput implements FormInputType {
     this.property = property
     this.values = values
     this.propertyKey = propertyKey
+  }
+  originalProperty(): Property {
+    return this.property
   }
   title(): string | undefined {
     return this.property.title
@@ -73,7 +79,7 @@ export class EnumInput implements FormInputType {
     return this.property.default
   }
   debug(): string {
-    let titleOrKey = this.title() ?? this.key()
+    const titleOrKey = this.title() ?? this.key()
     return `EnumInput: ${titleOrKey} with values ${JSON.stringify(this.values)}`
   }
 
@@ -84,30 +90,50 @@ export class EnumInput implements FormInputType {
     return new EnumValidator(this.values, this.property.default !== undefined)
   }
 }
-export function enumInputFromProperty(key: string, property: Property,
-  parsingSchema: ParsingSchema): EnumInput | undefined {
+export function enumInputFromProperty(
+  key: string,
+  property: Property,
+  parsingSchema: ParsingSchema
+): EnumInput | undefined {
   if (property.oneOf && !property.enum) {
-    let oneOf = property.oneOf as Array<Property>
-    let values = new Array<EnumValue>()
-    for (const value of oneOf) {
-      if (value.type !== 'string' && !value.const){
-        return undefined
-      }
-      values.push({
-        value: value.const as string,
-        name: value.title ?? value.const as string,
-        description: value.description
-      })
-    }
-    return new EnumInput(property, key, values)
+    return enumInputFromOneOf(key, property, parsingSchema)
   } else if (!property.enum) {
     return undefined
   }
-  let values = property.enum.map((value: string) => {
+  const values = property.enum.map((value: string) => {
     return {
-      value,
-      name: value
+      value
     }
   })
+  return new EnumInput(property, key, values)
+}
+/* eslint-disable @typescript-eslint/no-unused-vars */
+function enumInputFromOneOf(
+  key: string,
+  property: Property,
+  parsingSchema: ParsingSchema
+): EnumInput | undefined {
+  if (!property.oneOf && !property.enum) {
+    return undefined
+  }
+  const oneOf = property.oneOf as Array<Property>
+  const values = new Array<EnumValue>()
+  for (const value of oneOf) {
+    if (!value.const) {
+      console.debug(
+        '[POSSIBLE_ERROR] If this is supposed to be an enum, it should have a const property'
+      )
+      return undefined
+    }
+    if (value.type !== 'string') {
+      return undefined
+    }
+    console.debug(`[DEBUG] Found Enum Entry ${JSON.stringify(value)}`)
+    values.push({
+      value: value.const,
+      title: value.title,
+      description: value.description
+    })
+  }
   return new EnumInput(property, key, values)
 }

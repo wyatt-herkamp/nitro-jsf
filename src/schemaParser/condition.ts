@@ -3,7 +3,7 @@ import {
   FormCondition,
   FormConditionalInput,
   FormInputType
-} from '../JsonForm'
+} from '../jsonForm'
 import { ParsingSchema } from './schema'
 import { parseProperty, Property } from './properties'
 export interface NotCondition {
@@ -24,23 +24,22 @@ export interface ConditionInput {
   [key: string]: any
 }
 
-
 export function parseIfCondition(
   schemaConditionStatement: IfCondition,
   parsingSchema: ParsingSchema
 ): FormConditionalInput {
-  let ifCondition = schemaConditionStatement.if
-  let thenCondition = schemaConditionStatement.then
+  const ifCondition = schemaConditionStatement.if
+  const thenCondition = schemaConditionStatement.then
   if (!ifCondition.properties) {
     throw new Error('Currently only properties are supported in if conditions')
   }
   if (!thenCondition) {
     throw new Error('Then condition is required')
   }
-  let conditions = Array<FormCondition>()
-  let extraProperties = Array<FormInputType>()
-  let elseProperties = Array<FormInputType>()
-  let ifProperties = ifCondition.properties
+  const conditions = Array<FormCondition>()
+  const extraProperties = Array<FormInputType>()
+  const elseProperties = Array<FormInputType>()
+  const ifProperties = ifCondition.properties
   for (const key in ifProperties) {
     if (Object.prototype.hasOwnProperty.call(ifProperties, key)) {
       const element = ifProperties[key]
@@ -54,22 +53,22 @@ export function parseIfCondition(
       conditions.push(parsedCondition)
     }
   }
-  let thenProperties = schemaConditionStatement.then.properties
+  const thenProperties = schemaConditionStatement.then.properties
   for (const key in thenProperties) {
     if (Object.prototype.hasOwnProperty.call(thenProperties, key)) {
       const element = thenProperties[key]
-      let parse = parseProperty(key, element, parsingSchema)
+      const parse = parseProperty(key, element, parsingSchema)
       console.debug(`[DEBUG] Adding an property on a condition: ${JSON.stringify(parse)}`)
       extraProperties.push(parse)
     }
   }
 
   if (schemaConditionStatement.else) {
-    let rawElseProperties = schemaConditionStatement.else.properties
+    const rawElseProperties = schemaConditionStatement.else.properties
     for (const key in rawElseProperties) {
       if (Object.prototype.hasOwnProperty.call(rawElseProperties, key)) {
         const element = rawElseProperties[key]
-        let parse = parseProperty(key, element, parsingSchema)
+        const parse = parseProperty(key, element, parsingSchema)
         console.debug(`[DEBUG] Adding an property if condition is false: ${JSON.stringify(parse)}`)
         elseProperties.push(parse)
       }

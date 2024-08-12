@@ -2,10 +2,10 @@ import validator from 'validator'
 import {
   FormInputType,
   InputValidator,
+  CompositeValidator,
   SchemaHTMLInputEquivalence,
-  ValidationError,
   ValidationResult
-} from '../JsonForm'
+} from '../jsonForm'
 import { Property } from '../lib'
 import { ParsingSchema } from '../schemaParser/schema'
 export enum StringFormat {
@@ -18,35 +18,25 @@ export enum StringFormat {
   UUID = 'uuid',
   CSSColor = 'color'
 }
-export class StringValidator implements InputValidator {
-  minLength?: number
-  maxLength?: number
-  constructor(minLength?: number, maxLength?: number) {
+export class MinLengthValidator implements InputValidator {
+  minLength: number
+  constructor(minLength: number) {
     this.minLength = minLength
+  }
+  validate(value: any): ValidationResult {
+    return { success: value.length >= this.minLength }
+  }
+}
+export class MaxLengthValidator implements InputValidator {
+  maxLength: number
+  constructor(maxLength: number) {
     this.maxLength = maxLength
   }
   validate(value: any): ValidationResult {
-    if (typeof value !== 'string') {
-      return {
-        success: false,
-        error: 'Value is not a string'
-      }
-    }
-    if (this.minLength && value.length < this.minLength) {
-      return {
-        success: false,
-        error: `Value is too short. Min length is ${this.minLength}`
-      }
-    }
-    if (this.maxLength && value.length > this.maxLength) {
-      return {
-        success: false,
-        error: `Value is too long. Max length is ${this.maxLength}`
-      }
-    }
-    return { success: true }
+    return { success: value.length <= this.maxLength }
   }
 }
+
 export class StringRegexValidator implements InputValidator {
   regex: string
   constructor(regex: string) {
@@ -66,12 +56,16 @@ export class StringFormatValidator implements InputValidator {
     switch (this.format) {
       case StringFormat.Date:
         result = validator.isDate(value)
+        break
       case StringFormat.Time:
         result = validator.isTime(value)
+        break
       case StringFormat.Email:
         result = validator.isEmail(value)
+        break
       case StringFormat.UUID:
         result = validator.isUUID(value)
+        break
       default:
         console.warn(`StringFormatValidator: ${this.format as string} not implemented`)
     }
@@ -87,6 +81,9 @@ export class StringInput implements FormInputType {
   constructor(property: Property, propertyKey: string) {
     this.property = property
     this.propertyKey = propertyKey
+  }
+  originalProperty(): Property {
+    return this.property
   }
   title(): string | undefined {
     return this.property.title
@@ -116,24 +113,35 @@ export class StringInput implements FormInputType {
     return this.property.default
   }
   debug(): string {
-    let titleOrKey = this.title() ?? this.key()
+    const titleOrKey = this.title() ?? this.key()
     return `StringInput: ${titleOrKey}`
   }
   htmlElement(): SchemaHTMLInputEquivalence | undefined {
     return new SchemaHTMLInputEquivalence('input', { type: 'text' })
   }
   validator(): InputValidator {
-    if (this.property.format) {
-      return new StringFormatValidator(this.property.format as StringFormat)
+    const validators = Array<InputValidator>()
+    if (this.property.minLength) {
+      validators.push(new MinLengthValidator(this.property.minLength))
+    }
+    if (this.property.maxLength) {
+      validators.push(new MaxLengthValidator(this.property.maxLength))
     }
     if (this.property.pattern) {
-      return new StringRegexValidator(this.property.pattern)
+      validators.push(new StringRegexValidator(this.property.pattern))
     }
-    return new StringValidator(this.property.minLength, this.property.maxLength)
+    if (this.property.format) {
+      validators.push(new StringFormatValidator(this.property.format))
+    }
+    return new CompositeValidator(validators)
   }
 }
-export function stringInputFromProperty(key: string, property: Property,
-  parsingSchema: ParsingSchema): StringInput | undefined {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+export function stringInputFromProperty(
+  key: string,
+  property: Property,
+  parsingSchema: ParsingSchema
+): StringInput | undefined {
   if (property.type !== 'string') {
     return undefined
   }
