@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RepositoryPage",
+  "type": "object",
+  "properties": {
+    "pageType": {
+      "title": "Page Type",
+      "enum": ["None", "Markdown"],
+      "default": "None"
+    }
+  },
+  "if": {
+    "properties": {
+      "pageType": {
+        "const": "Markdown"
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "markdown": {
+        "type": "string"
+      }
+    },
+    "required": ["markdown"]
+  },
+  "required": ["pageType"]
+}

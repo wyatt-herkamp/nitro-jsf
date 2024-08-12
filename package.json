@@ -1,0 +1,50 @@
+{
+  "name": "nitro-jsr",
+  "private": true,
+  "version": "0.0.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "author": {
+    "name": "Wyatt Herkamp",
+    "email": "wherkamp@gmail.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    },
+    {
+      "type": "Apache-2.0"
+    }
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "src/",
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest",
+    "format": "prettier --write .",
+    "test:ui": "vitest --ui --watch",
+    "test:cov": "vitest --coverage"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/node": "^22.2.0",
+    "@vitest/ui": "^2.0.5",
+    "glob": "^11.0.0",
+    "prettier": "^3.3.3",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  },
+  "dependencies": {
+    "validator": "^13.12.0"
+  }
+}

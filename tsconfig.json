@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "types": ["vitest/globals"]
+  },
+  "exclude": ["node_modules", "dist"]
+}

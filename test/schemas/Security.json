@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "SecurityConfig",
+    "type": "object",
+    "properties": {
+        "must_use_auth_token_for_push": {
+            "description": "If the repository requires an auth token to be used",
+            "type": "boolean",
+            "default": false
+        },
+        "visibility": {
+            "description": "visibility of the repository",
+            "$ref": "#/$defs/Visibility",
+            "default": "Public"
+        }
+    },
+    "$defs": {
+        "Visibility": {
+            "oneOf": [
+                {
+                    "description": "Completely public anyone can read to this repository",
+                    "type": "string",
+                    "const": "Public"
+                },
+                {
+                    "description": "Only users with the correct permissions can read this repository",
+                    "type": "string",
+                    "const": "Private"
+                },
+                {
+                    "description": "Hidden. You can read this repository but indexing will be disabled",
+                    "type": "string",
+                    "const": "Hidden"
+                }
+            ]
+        }
+    }
+}
