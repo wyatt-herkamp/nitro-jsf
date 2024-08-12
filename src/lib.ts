@@ -1,10 +1,4 @@
-import { NumberInput } from './inputTypes/NumberInput';
-import { DefaultInput } from './inputTypes/DefaultInput';
-import { BooleanInput } from './inputTypes/BooleanInput';
-import { ArrayInput } from './inputTypes/ArrayInput';
-import { ObjectInputType } from './inputTypes/ObjectInput';
-import { StringInput } from './inputTypes/StringInput'
-import { EnumInput, EnumValidator } from './inputTypes/EnumInput'
+
 import { Definitions, getDefinitions } from './schemaParser/def'
 import { ParsingSchema, RootSchema } from './schemaParser/schema'
 import { FormConditionalInput, FormInputType, SchemaForm, SchemaInstance } from './JsonForm'
@@ -42,4 +36,15 @@ export function createForm(schema: RootSchema): SchemaForm {
   return result
 }
 
-export { EnumInput, EnumValidator, StringInput, Property, RefProperty, Definitions, ObjectInputType, ArrayInput,BooleanInput, DefaultInput, NumberInput, FormConditionalInput, FormInputType  }
+export * from './JsonForm'
+export * from './inputTypes/NumberInput'
+export * from './inputTypes/DefaultInput'
+export * from './inputTypes/BooleanInput'
+export * from './inputTypes/ArrayInput'
+export * from './inputTypes/ObjectInput'
+export * from './inputTypes/StringInput'
+export * from './inputTypes/EnumInput'
+export * from './schemaParser/def'
+export * from './schemaParser/schema'
+export * from './schemaParser/properties'
+export * from './schemaParser/condition'
