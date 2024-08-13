@@ -1,6 +1,6 @@
 {
   "name": "nitro-jsr",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "./dist/lib.js",
   "module": "./dist/lib.mjs",
   "author": {
