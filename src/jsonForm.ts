@@ -1,4 +1,4 @@
-import { Property } from './schemaParser/properties'
+import { FormInputType, ValidationError } from './inputTypes'
 
 export class SchemaInstance {
   public properties: Array<FormInputType>
@@ -110,83 +110,6 @@ export class SchemaForm {
     }
     return errors
   }
-}
-export class ValidationError {
-  property: string
-  message?: string
-  constructor(property: string, message?: string) {
-    this.property = property
-    this.message = message
-  }
-}
-export class SchemaHTMLInputEquivalence {
-  htmlElement: string
-  requiredAttributes: Record<string, string>
-
-  constructor(htmlElement: string, requiredAttributes: Record<string, string>) {
-    this.htmlElement = htmlElement
-    this.requiredAttributes = requiredAttributes
-  }
-}
-export interface ValidationResult {
-  success: boolean
-  error?: string
-}
-export interface InputValidator {
-  validate(value: any): ValidationResult
-}
-/**
- * Checks if all validators pass.
- */
-export class CompositeValidator implements InputValidator {
-  validators: Array<InputValidator>
-  constructor(validators: Array<InputValidator>) {
-    this.validators = validators
-  }
-  validate(value: any): ValidationResult {
-    for (const validator of this.validators) {
-      const result = validator.validate(value)
-      if (!result.success) {
-        return result
-      }
-    }
-    return { success: true }
-  }
-}
-export interface FormInputType {
-  /**
-   * This HTML Element that should be used to render the form
-   */
-
-  htmlElement(): SchemaHTMLInputEquivalence | undefined
-
-  validator(): InputValidator
-
-  debug(): string
-
-  title(): string | undefined
-  /**
-   * The Type of the input. This is not the same as the property type from JSON Schema. This is used as a way to hint what kind of input should be used.
-   */
-  type(): string
-  /**
-   * This is the source property from the JSON Schema. This is used to get the original property if needed.
-   */
-  originalProperty(): Property
-
-  key(): string
-
-  description(): string | undefined
-
-  isRequired(): boolean
-
-  readOnly(): boolean
-
-  writeOnly(): boolean
-
-  deprecated(): boolean
-
-  default(): any | undefined
 }
 
 export interface FormCondition {

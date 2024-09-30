@@ -1,6 +1,6 @@
-import { FormInputType, InputValidator, SchemaHTMLInputEquivalence } from '../jsonForm'
+import { FormInputType, InputValidator } from './index'
 import { Property } from '../lib'
-import { ParsingSchema } from '../schemaParser/schema'
+import { ParsingSchema } from '../schemaParser'
 
 export class BooleanInput implements FormInputType {
   property: Property
@@ -43,9 +43,7 @@ export class BooleanInput implements FormInputType {
     const titleOrKey = this.title ?? this.key
     return `Bool: ${titleOrKey}`
   }
-  htmlElement(): SchemaHTMLInputEquivalence | undefined {
-    return new SchemaHTMLInputEquivalence('input', { type: 'text' })
-  }
+
   validator(): InputValidator {
     return {
       validate: (value: any) => {

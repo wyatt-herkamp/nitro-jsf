@@ -1,13 +1,7 @@
 import validator from 'validator'
-import {
-  FormInputType,
-  InputValidator,
-  CompositeValidator,
-  SchemaHTMLInputEquivalence,
-  ValidationResult
-} from '../jsonForm'
+import { FormInputType, InputValidator, CompositeValidator, ValidationResult } from './index'
 import { Property } from '../lib'
-import { ParsingSchema } from '../schemaParser/schema'
+import { ParsingSchema } from '../schemaParser'
 export enum StringFormat {
   DateTime = 'date-time',
   Date = 'date',
@@ -116,9 +110,7 @@ export class StringInput implements FormInputType {
     const titleOrKey = this.title() ?? this.key()
     return `StringInput: ${titleOrKey}`
   }
-  htmlElement(): SchemaHTMLInputEquivalence | undefined {
-    return new SchemaHTMLInputEquivalence('input', { type: 'text' })
-  }
+
   validator(): InputValidator {
     const validators = Array<InputValidator>()
     if (this.property.minLength) {

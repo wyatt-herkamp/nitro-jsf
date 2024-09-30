@@ -1,5 +1,4 @@
-import { FormInputType } from '../jsonForm'
-import { InputValidator, SchemaHTMLInputEquivalence } from '../jsonForm'
+import { FormInputType, InputValidator } from './index'
 import { Property } from '../lib'
 
 export class DefaultInput implements FormInputType {
@@ -43,14 +42,15 @@ export class DefaultInput implements FormInputType {
     const title = this.title() ?? this.key()
     return `${this.type}: ${title}`
   }
-  htmlElement(): SchemaHTMLInputEquivalence | undefined {
-    return undefined
-  }
-  /* eslint-disable @typescript-eslint/no-unused-vars */
+
   validator(): InputValidator {
     return {
       validate: (value: any) => {
-        return { success: false, message: 'No validator for this type' }
+        console.warn(`No validator for ${typeof value}`)
+        return {
+          success: false,
+          message: `No validator for type ${typeof value} in property type of ${this.type()}`
+        }
       }
     }
   }

@@ -1,12 +1,6 @@
-import {
-  CompositeValidator,
-  FormInputType,
-  InputValidator,
-  SchemaHTMLInputEquivalence,
-  ValidationResult
-} from '../jsonForm'
+import { CompositeValidator, FormInputType, InputValidator, ValidationResult } from './index'
 import { Property } from '../lib'
-import { ParsingSchema } from '../schemaParser/schema'
+import { ParsingSchema } from '../schemaParser'
 export class isInteger implements InputValidator {
   validate(value: any): ValidationResult {
     return { success: Number.isInteger(value) }
@@ -96,9 +90,6 @@ export class NumberInput implements FormInputType {
   debug(): string {
     const titleOrKey = this.title ?? this.key
     return `Bool: ${titleOrKey}`
-  }
-  htmlElement(): SchemaHTMLInputEquivalence | undefined {
-    return new SchemaHTMLInputEquivalence('input', { type: 'text' })
   }
   validator(): InputValidator {
     const validators = Array<InputValidator>()

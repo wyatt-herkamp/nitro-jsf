@@ -1,5 +1,6 @@
 import { Property } from './properties'
-import { BaseSchema } from './schema'
+import { BaseSchema } from '.'
+import { isHttpDefinition } from '../utils'
 export type Definition = BaseSchema | Property
 export class Definitions {
   definitions: Record<string, Definition>
@@ -7,8 +8,10 @@ export class Definitions {
     this.definitions = definitions
   }
   lookupDefinition(ref: string): Definition {
-    if (ref.startsWith('http') || ref.startsWith('https')) {
-      throw new Error(`HTTP references are not supported`)
+    if (isHttpDefinition(ref)) {
+      throw new Error(
+        `HTTP References must be looked up via a call to ParsingSchema.lookupDefinition`
+      )
     }
     const definition = this.definitions[ref]
     if (!definition) {

@@ -1,11 +1,7 @@
-import {
-  EqualsFormCondition,
-  FormCondition,
-  FormConditionalInput,
-  FormInputType
-} from '../jsonForm'
-import { ParsingSchema } from './schema'
+import { EqualsFormCondition, FormCondition, FormConditionalInput } from '../jsonForm'
+import { ParsingSchema } from '.'
 import { parseProperty, Property } from './properties'
+import { FormInputType } from '../lib'
 export interface NotCondition {
   not: ConditionInput
 }

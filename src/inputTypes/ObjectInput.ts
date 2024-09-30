@@ -1,7 +1,7 @@
-import { FormInputType } from '../jsonForm'
-import { InputValidator, SchemaHTMLInputEquivalence } from '../jsonForm'
+import { FormInputType } from './index'
+import { InputValidator } from './index'
 import { Property } from '../lib'
-import { ParsingSchema } from '../schemaParser/schema'
+import { ParsingSchema } from '../schemaParser'
 import { parseProperty } from '../schemaParser/properties'
 
 export class ObjectInputType implements FormInputType {
@@ -48,16 +48,11 @@ export class ObjectInputType implements FormInputType {
     const itemsDebug = this.items.map((item) => item.debug()).join(', ')
     return `Object: ${titleOrKey} [${itemsDebug}]`
   }
-
-  htmlElement(): SchemaHTMLInputEquivalence | undefined {
-    // This tells the form renderer. That this is a subform
-    return new SchemaHTMLInputEquivalence('form', {})
-  }
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   validator(): InputValidator {
     // TODO: Implement Object Validator
     return {
       validate: (value: any) => {
+        console.warn(`No validator for ${typeof value} in ObjectInput`)
         return { success: true }
       }
     }

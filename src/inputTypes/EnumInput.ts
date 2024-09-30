@@ -1,11 +1,6 @@
-import {
-  FormInputType,
-  InputValidator,
-  SchemaHTMLInputEquivalence,
-  ValidationResult
-} from '../jsonForm'
+import { FormInputType, InputValidator, ValidationResult } from './index'
 import { Property } from '../lib'
-import { ParsingSchema } from '../schemaParser/schema'
+import { ParsingSchema } from '../schemaParser'
 
 export interface EnumValue {
   value: any
@@ -83,9 +78,6 @@ export class EnumInput implements FormInputType {
     return `EnumInput: ${titleOrKey} with values ${JSON.stringify(this.values)}`
   }
 
-  htmlElement(): SchemaHTMLInputEquivalence | undefined {
-    return new SchemaHTMLInputEquivalence('select', {})
-  }
   validator(): InputValidator {
     return new EnumValidator(this.values, this.property.default !== undefined)
   }

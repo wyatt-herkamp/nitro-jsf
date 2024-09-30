@@ -1,12 +1,12 @@
 import { enumInputFromProperty } from '../inputTypes/EnumInput'
 import { stringInputFromProperty } from '../inputTypes/StringInput'
-import { FormInputType } from '../jsonForm'
-import { ParsingSchema } from './schema'
+import { ParsingSchema } from '.'
 import { DefaultInput } from '../inputTypes/DefaultInput'
 import { booleanInputFromProperty } from '../inputTypes/BooleanInput'
 import { numberInputFromProperty } from '../inputTypes/NumberInput'
 import { objectInputFromProperty } from '../inputTypes/ObjectInput'
 import { arrayInputFromProperty } from '../inputTypes/ArrayInput'
+import { FormInputType, InvalidPropertyTypeError } from '../lib'
 
 export interface Property {
   default?: any
@@ -70,17 +70,28 @@ function parseTypedProperty(
   }
   if (!resultInputType) {
     console.warn(`No parser found for property with ${key}. ${JSON.stringify(property)}`)
+    if (parsing.config.denyOnUnknownPropertyTypes) {
+      throw new InvalidPropertyTypeError(key, property)
+    }
     resultInputType = new DefaultInput(key, property)
   }
   console.debug(`[DEBUG] Parsed Property ${key} as ${resultInputType.debug()}`)
   return resultInputType
 }
 
+/**
+ * A parser that takes a property and returns a FormInputType
+ */
 type PropertyParser = (
   key: string,
   property: Property,
   parsingSchema: ParsingSchema
 ) => FormInputType | undefined
+/**
+ * Order of parsers is important
+ *
+ * Because. String can consume a valid enum type.
+ */
 const propertyParsers: Array<PropertyParser> = [
   enumInputFromProperty,
   stringInputFromProperty,

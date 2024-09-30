@@ -1,12 +1,6 @@
-import {
-  CompositeValidator,
-  FormInputType,
-  InputValidator,
-  SchemaHTMLInputEquivalence,
-  ValidationResult
-} from '../jsonForm'
+import { CompositeValidator, FormInputType, InputValidator, ValidationResult } from './index'
 import { Property } from '../lib'
-import { ParsingSchema } from '../schemaParser/schema'
+import { ParsingSchema } from '../schemaParser'
 export enum ContainsOptions {
   number = 'number',
   integer = 'integer',
@@ -172,10 +166,7 @@ export class ArrayInput implements FormInputType {
     const titleOrKey = this.title ?? this.key
     return `Array: ${titleOrKey}`
   }
-  htmlElement(): SchemaHTMLInputEquivalence | undefined {
-    // It is a list of items, so we use ul
-    return new SchemaHTMLInputEquivalence('ul', {})
-  }
+
   validator(): InputValidator {
     const validators = Array<InputValidator>()
     if (this.property.minItems) {
