@@ -33,6 +33,7 @@ export class ParsingSchema {
 }
 export interface BaseSchema {
   title?: string
+  type?: string
   properties?: Record<string, Property>
   required?: Array<string>
   anyOf?: Array<BaseSchema>

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EnumSchemaTest",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "A": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "A"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "B": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "B"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "String": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "String"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "Other": {
+          "$ref": "#/$defs/MyStruct"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "Other"
+      ]
+    }
+  ],
+  "$defs": {
+    "MyStruct": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "b": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "a",
+        "b"
+      ]
+    }
+  }
+}

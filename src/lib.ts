@@ -5,6 +5,8 @@ import { parseProperties } from './schemaParser/properties'
 import { InternalConfig, ParsingConfig } from './config'
 import { IfCondition, parseIfCondition } from './schemaParser/condition'
 import { UnsupportedSchemaError } from './errors'
+import { EnumPatternTypes, isAnyOfEnumPattern } from './schemaParser/enums'
+import { enumInputAdjacentTagged } from './inputTypes/EnumInput2'
 /**
  * Parses a stringified JSON schema into a form
  * @param schema schema to be parsed into a form
@@ -47,6 +49,32 @@ export function createForm(schema: RootSchema, config?: ParsingConfig): SchemaFo
     allOf.push(allOfInstance)
   }
   result.allOf = allOf
+
+  if (schema.oneOf) {
+    const anyOfEnum = isAnyOfEnumPattern(schema.oneOf)
+    if (anyOfEnum) {
+      console.debug(`[DEBUG] Found Enum Pattern ${JSON.stringify(anyOfEnum)}`)
+
+      if (anyOfEnum.type === EnumPatternTypes.InternallyTagged) {
+        throw new Error('Internally Tagged Enum Patterns are not supported yet')
+      } else if (anyOfEnum.type === EnumPatternTypes.AdjacentlyTagged) {
+        const enumInput = enumInputAdjacentTagged(
+          anyOfEnum.keyTag,
+          anyOfEnum.valueTag,
+          schema.oneOf,
+          parsingSchema
+        )
+        if (enumInput) {
+          if (result.primary.properties === undefined) {
+            result.primary.properties = []
+          }
+          result.primary.properties.push(enumInput)
+        }
+      }
+    } else {
+      console.debug(`[DEBUG] No Enum Pattern Found`)
+    }
+  }
 
   return result
 }

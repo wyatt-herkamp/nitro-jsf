@@ -182,6 +182,9 @@ export class ArrayInput implements FormInputType {
       validators.push(new ContainsTypeValidator(type, minimumMatches, maximumMatches))
     }
     return new CompositeValidator(validators)
+  } // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getProperties(_input: any): Array<FormInputType> | undefined {
+    return undefined
   }
 }
 /* eslint-disable @typescript-eslint/no-unused-vars */

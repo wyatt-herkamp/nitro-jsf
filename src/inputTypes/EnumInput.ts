@@ -81,6 +81,10 @@ export class EnumInput implements FormInputType {
   validator(): InputValidator {
     return new EnumValidator(this.values, this.property.default !== undefined)
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getProperties(_input: any): Array<FormInputType> | undefined {
+    return undefined
+  }
 }
 export function enumInputFromProperty(
   key: string,

@@ -110,6 +110,9 @@ export class NumberInput implements FormInputType {
       validators.push(new MultipleOfValidator(this.property.multipleOf))
     }
     return new CompositeValidator(validators)
+  } // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getProperties(_input: any): Array<FormInputType> | undefined {
+    return undefined
   }
 }
 /* eslint-disable @typescript-eslint/no-unused-vars */

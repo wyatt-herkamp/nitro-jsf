@@ -56,6 +56,9 @@ export class ObjectInputType implements FormInputType {
         return { success: true }
       }
     }
+  } // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getProperties(_input: any): Array<FormInputType> | undefined {
+    return undefined
   }
 }
 export function objectInputFromProperty(

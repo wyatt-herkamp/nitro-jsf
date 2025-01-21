@@ -89,9 +89,9 @@ export interface FormInputType {
   /**
    * This is the source property from the JSON Schema. This is used to get the original property if needed.
    */
-  originalProperty(): Property
+  originalProperty(): Property | undefined
 
-  key(): string
+  key(): string | string[]
   /**
    * The description of the input. This is used to show the user what the input is for.
    */
@@ -116,6 +116,8 @@ export interface FormInputType {
    * The default value of the property.
    */
   default(): any | undefined
+
+  getProperties(input: any): Array<FormInputType> | undefined
 }
 export * from './NumberInput'
 export * from './DefaultInput'

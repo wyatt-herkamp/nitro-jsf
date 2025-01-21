@@ -43,7 +43,10 @@ export class BooleanInput implements FormInputType {
     const titleOrKey = this.title ?? this.key
     return `Bool: ${titleOrKey}`
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getProperties(_input: any): Array<FormInputType> | undefined {
+    return undefined
+  }
   validator(): InputValidator {
     return {
       validate: (value: any) => {

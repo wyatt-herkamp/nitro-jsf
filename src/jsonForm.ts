@@ -10,6 +10,13 @@ export class SchemaInstance {
     for (const property of this.properties) {
       console.debug(`[DEBUG] Adding property: ${property.debug()}`)
       result.push(property)
+      const subProperties = property.getProperties(input)
+      if (subProperties) {
+        for (const subProperty of subProperties) {
+          console.debug(`[DEBUG] Adding sub property: ${subProperty.debug()}`)
+          result.push(subProperty)
+        }
+      }
     }
     if (this.condition) {
       console.debug(`[DEBUG] Checking condition: ${JSON.stringify(this.condition)}`)
@@ -46,6 +53,7 @@ export class SchemaForm {
   public schema: string
   public primary: SchemaInstance
   public allOf: Array<SchemaInstance>
+  public anyOf: Array<SchemaInstance>
   public title: string
 
   constructor(schema: string, title: string, instance: SchemaInstance) {
@@ -103,9 +111,14 @@ export class SchemaForm {
     }
     const errors = new Array<ValidationError>()
     for (const property of properties) {
-      const validationResult = property.validator().validate(input[property.key()])
-      if (!validationResult.success) {
-        errors.push(new ValidationError(property.key(), validationResult.error))
+      if (Array.isArray(property.key())) {
+        console.debug(`[DEBUG] Skipping array property ${property.key()}`)
+        continue
+      } else {
+        const validationResult = property.validator().validate(input[property.key() as string])
+        if (!validationResult.success) {
+          errors.push(new ValidationError(property.key() as string, validationResult.error))
+        }
       }
     }
     return errors
