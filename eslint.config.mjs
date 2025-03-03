@@ -4,7 +4,7 @@ export default [
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ['node_modules/*', 'dist/**/*'],
+    ignores: ['node_modules/*', 'dist/**/*', "site/"],
   },
   {
     rules:{
